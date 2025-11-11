@@ -3,282 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator API Key</title>
+    <title>Create API Key [RETRO]</title>
     <style>
-        /* Gaya Dasar */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
+        /* --- 1. Pengaturan Global & Latar Belakang (Retro) --- */
+        body, html {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            height: 100%;
+            /* Font Monospace klasik untuk nuansa terminal/retro */
+            font-family: 'Courier New', Courier, monospace; 
+            background-color: #C0C0C0; /* Abu-abu terang (seperti jendela Windows 95) */
+            color: #000000; /* Teks hitam */
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
+            align-items: center;
         }
 
-        /* Container Form Responsif */
-        .api-key-container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px; /* Lebar Maksimum untuk tampilan desktop/tablet */
-            box-sizing: border-box;
-        }
-
-        h2 {
-            color: #333;
+        /* --- 2. Kotak Utama (Kartu) - Gaya Jendela Klasik --- */
+        .api-card {
+            /* Warna latar belakang dan efek 3D klasik */
+            background-color: #E0E0E0;
+            border-style: solid;
+            border-width: 2px;
+            border-color: #FFFFFF #808080 #808080 #FFFFFF; /* Efek 3D: Light atas/kiri, Dark bawah/kanan */
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 500px;
             text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        /* Gaya Input dan Select */
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
             box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        select:focus {
-            border-color: #007bff; /* Warna fokus yang menarik */
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            box-shadow: 5px 5px 0px 0px rgba(0,0,0,0.5); /* Shadow yang tegas */
         }
         
-        /* Gaya Tombol */
-        .btn-generate {
-            display: block;
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #000000;
+            text-shadow: 1px 1px 0px #FFFFFF; /* Sedikit efek bayangan teks */
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: #555555;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- 3. Tombol "Buat API Key" - Gaya Tombol Klasik --- */
+        .generate-btn {
+            background-color: #C0C0C0;
+            color: #000000;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
             width: 100%;
-            padding: 12px;
-            background-color: #28a745; /* Warna hijau untuk Generate/Sukses */
-            color: white;
-            border: none;
-            border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.1s;
-        }
-
-        .btn-generate:hover:not(:disabled) {
-            background-color: #218838;
-        }
-
-        .btn-generate:active:not(:disabled) {
-            transform: scale(0.99);
-        }
-
-        .btn-generate:disabled {
-            background-color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        /* Responsif: Penyesuaian untuk layar sangat kecil */
-        @media (max-width: 600px) {
-            .api-key-container {
-                padding: 20px 15px; /* Kurangi padding untuk layar kecil */
-            }
             
-            input[type="text"],
-            input[type="number"],
-            select,
-            .btn-generate {
-                font-size: 15px;
-            }
+            /* Border 3D Inset Klasik */
+            border: none;
+            border-style: solid;
+            border-width: 2px;
+            border-color: #FFFFFF #000000 #000000 #FFFFFF; 
+            
+            transition: none; /* Hilangkan transisi modern */
+            margin-bottom: 1rem;
         }
 
-        /* Bagian Output */
-        #output-key-section {
-            margin-top: 25px;
-            padding: 15px;
-            background-color: #e9ecef;
-            border: 1px dashed #ced4da;
-            border-radius: 8px;
-            display: none;
+        .generate-btn:hover {
+            background-color: #D0D0D0;
         }
         
-        #output-key {
-            font-family: monospace;
-            word-break: break-all;
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #d63384; /* Warna khas untuk API Key */
+        /* Efek klik tombol retro: border terbalik */
+        .generate-btn:active {
+            border-color: #000000 #FFFFFF #FFFFFF #000000;
+            padding-top: 0.85rem; /* Kompensasi untuk pergeseran bayangan */
+            padding-bottom: 0.65rem;
         }
-        
-        #message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 6px;
-            display: none;
+
+        /* --- 4. Kotak Teks API Key & Tombol Salin --- */
+        .key-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .api-key-input {
+            width: 100%;
+            /* Tampilan Input Inset */
+            background-color: #FFFFFF; 
+            border: 1px solid #000000; /* Garis tepi yang sangat jelas */
+            border-style: solid;
+            border-width: 2px;
+            border-color: #808080 #FFFFFF #FFFFFF #808080; /* Efek Inset 3D */
+            
+            color: #00008B; /* Warna biru tua/navy untuk teks kunci (nuansa terminal) */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            padding: 1rem;
+            padding-right: 70px;
+            box-sizing: border-box;
+            
+            /* Hilangkan border-radius modern */
+            border-radius: 0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            
+            /* Gaya Tombol Klasik */
+            background-color: #C0C0C0;
+            color: #000000;
+            border: none;
+            border-style: solid;
+            border-width: 2px;
+            border-color: #FFFFFF #000000 #000000 #FFFFFF; 
+            
+            border-radius: 0;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.7rem;
             font-weight: bold;
+            cursor: pointer;
+            transition: none;
+        }
+        
+        .copy-btn:hover {
+            background-color: #D0D0D0;
+        }
+
+        .copy-btn:active {
+            border-color: #000000 #FFFFFF #FFFFFF #000000;
+        }
+
+        /* --- 5. Teks Umpan Balik & Info (Terminal Style) --- */
+        .copy-feedback {
+            font-size: 0.8rem;
+            color: #008000; /* Hijau terminal untuk pesan sukses */
+            margin-top: 0.5rem;
+            height: 1em;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-feedback.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .info-text {
+            font-size: 0.8rem;
+            color: #555555;
+            margin-top: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        /* --- 6. Footer --- */
+        footer {
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 0.7rem;
+            color: #555555;
             text-align: center;
         }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
     </style>
 </head>
 <body>
 
-<div class="api-key-container">
-    <h2>🔑 Generate API Key Baru</h2>
-    
-    <form id="api-key-form">
-        
-        <div class="form-group">
-            <label for="key-name">Nama Key (Contoh: Key Aplikasi Mobile)</label>
-            <input type="text" id="key-name" name="key_name" required 
-                   placeholder="Masukkan nama deskriptif untuk key ini">
-        </div>
-        
-        <div class="form-group">
-            <label for="key-scope">Izin Akses (Scope) Key</label>
-            <select id="key-scope" name="key_scope" required>
-                <option value="" disabled selected>Pilih tingkat izin</option>
-                <option value="read-only">Hanya Baca (Read-Only)</option>
-                <option value="read-write">Baca & Tulis (Read/Write)</option>
-                <option value="admin">Administrator (Akses Penuh)</option>
-            </select>
+    <main class="api-card">
+        <h1>[ API KEY GENERATOR ]</h1>
+        <p class="subtitle">Buat dan Salin Kunci Anda. (Edisi Klasik)</p>
+
+        <button id="generateBtn" class="generate-btn">BUAT KUNCI</button>
+
+        <div class="key-container">
+            <input type="text" id="apiKeyInput" class="api-key-input" value="" readonly>
+            <button id="copyBtn" class="copy-btn">SALIN</button>
         </div>
 
-        <div class="form-group">
-            <label for="rate-limit">Batasan Rate Limit (Permintaan per menit)</label>
-            <input type="number" id="rate-limit" name="rate_limit" value="1000" min="10" 
-                   placeholder="Cth: 1000">
-        </div>
+        <p id="copyFeedback" class="copy-feedback">SUCCESS: Kunci telah disalin ke clipboard.</p>
 
-        <div class="form-group">
-            <label for="allowed-ip">IP Address yang Diizinkan (Kosongkan untuk semua)</label>
-            <input type="text" id="allowed-ip" name="allowed_ip" 
-                   placeholder="Cth: 203.0.113.44, 198.51.100.0/24">
-        </div>
-        
-        <button type="submit" class="btn-generate">
-            Buat API Key
-        </button>
-    </form>
-    
-    <div id="message" style="display: none;"></div>
+        <p class="info-text">Peringatan: Kunci dihasilkan di sisi klien (Web Crypto). Simpan di lokasi aman. Tidak dapat dikembalikan.</p>
+    </main>
 
-    <div id="output-key-section" style="display: none;">
-        <label>API Key Anda yang Baru:</label>
-        <div id="output-key"></div>
-        <p style="font-size: 0.8em; color: #6c757d; margin-top: 10px;">
-            **PENTING:** Simpan key ini dengan aman. Key ini mungkin tidak akan ditampilkan lagi.
-        </p>
-    </div>
+    <footer>
+        &copy; 1995-2025 Copyright DP
+    </footer>
 
-</div>
+    <script>
+        // --- 1. Pilih Elemen ---
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const copyFeedback = document.getElementById('copyFeedback');
 
-<script>
-    document.getElementById('api-key-form').addEventListener('submit', async function(e) {
-        e.preventDefault(); // Mencegah submit form default
-        
-        const form = e.target;
-        const submitButton = form.querySelector('.btn-generate');
-        const outputSection = document.getElementById('output-key-section');
-        const outputKey = document.getElementById('output-key');
-        const messageDiv = document.getElementById('message');
+        // --- 2. Fungsi untuk Membuat API Key (menggunakan Web Crypto) ---
+        function generateApiKey() {
+            // Buat 32 byte angka acak yang aman
+            const buffer = new Uint8Array(32);
+            window.crypto.getRandomValues(buffer);
 
-        // Reset UI
-        outputSection.style.display = 'none';
-        messageDiv.style.display = 'none';
-        
-        // Ambil nilai dari formulir
-        const keyName = document.getElementById('key-name').value;
-        const keyScope = document.getElementById('key-scope').value;
-        const rateLimit = document.getElementById('rate-limit').value;
-        const allowedIp = document.getElementById('allowed-ip').value;
-        
-        // Data yang akan dikirim ke server.js
-        // Catatan: server.js saat ini hanya menggunakan 'name' dan 'userId'.
-        // Kita kirim semua data, meskipun beberapa saat ini hanya untuk tujuan logging/simulasi.
-        const requestData = {
-            // UserId disimulasikan di sini, dalam aplikasi nyata ini didapat dari sesi otentikasi
-            userId: 'user-' + Math.random().toString(10).substring(2, 8), 
-            name: keyName,
-            scope: keyScope,
-            rateLimit: rateLimit,
-            allowedIp: allowedIp
-        };
+            // Ubah byte menjadi string Base64 dan buat URL-safe
+            const key = btoa(String.fromCharCode.apply(null, buffer))
+                .replace(/\+/g, '-') 
+                .replace(/\//g, '_') // Ganti '/' dengan '_' (tetap URL-safe)
+                .replace(/=/g, '');  
+            
+            // Tambahkan prefix dan potong sesuai panjang yang diinginkan
+            const finalKey = 'MH-' + key.substring(0, 45); // Panjang kunci disesuaikan sedikit
 
-        // UI Loading State
-        submitButton.textContent = 'Membuat Key...';
-        submitButton.disabled = true;
-
-        try {
-            // Lakukan panggilan API ke endpoint Node.js
-            const response = await fetch('http://localhost:3000/api/keys', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData)
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                // Sukses
-                outputKey.textContent = result.apiKey;
-                outputSection.style.display = 'block';
-                
-                messageDiv.textContent = result.message || 'API Key berhasil dibuat!';
-                messageDiv.className = 'success';
-                messageDiv.style.display = 'block';
-            } else {
-                // Gagal (Cth: server merespons 400/500)
-                messageDiv.textContent = `Gagal membuat Key: ${result.message || 'Server error'}`;
-                messageDiv.className = 'error';
-                messageDiv.style.display = 'block';
-            }
-
-        } catch (error) {
-            // Gagal (Cth: jaringan down, server tidak berjalan)
-            console.error('Fetch error:', error);
-            messageDiv.textContent = 'Gagal terhubung ke server. Pastikan Node.js server berjalan di http://localhost:3000.';
-            messageDiv.className = 'error';
-            messageDiv.style.display = 'block';
-        } finally {
-            // Kembalikan UI state
-            submitButton.textContent = 'Buat API Key';
-            submitButton.disabled = false;
+            apiKeyInput.value = finalKey;
+            
+            // Sembunyikan pesan copy saat kunci baru dibuat
+            copyFeedback.classList.remove('visible');
         }
-    });
-</script>
+
+        // --- 3. Fungsi untuk Menyalin ke Clipboard ---
+        function copyToClipboard() {
+            // Pilih teks di dalam input
+            apiKeyInput.select();
+            apiKeyInput.setSelectionRange(0, 99999); 
+
+            // Salin teks menggunakan API Clipboard modern
+            navigator.clipboard.writeText(apiKeyInput.value)
+                .then(() => {
+                    // Tampilkan pesan "berhasil disalin"
+                    copyFeedback.classList.add('visible');
+
+                    // Sembunyikan pesan setelah 2 detik
+                    setTimeout(() => {
+                        copyFeedback.classList.remove('visible');
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Gagal menyalin: ', err);
+                });
+        }
+
+        // --- 4. Tambahkan Event Listener ke Tombol ---
+        generateBtn.addEventListener('click', generateApiKey);
+        copyBtn.addEventListener('click', copyToClipboard);
+
+        // --- 5. Hasilkan kunci saat halaman pertama kali dimuat ---
+        generateApiKey();
+
+    </script>
 
 </body>
 </html>
