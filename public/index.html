@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator API Key</title>
+    <style>
+        /* Gaya Dasar */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        /* Container Form Responsif */
+        .api-key-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px; /* Lebar Maksimum untuk tampilan desktop/tablet */
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        /* Gaya Input dan Select */
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #007bff; /* Warna fokus yang menarik */
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+        
+        /* Gaya Tombol */
+        .btn-generate {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745; /* Warna hijau untuk Generate/Sukses */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .btn-generate:hover:not(:disabled) {
+            background-color: #218838;
+        }
+
+        .btn-generate:active:not(:disabled) {
+            transform: scale(0.99);
+        }
+
+        .btn-generate:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Responsif: Penyesuaian untuk layar sangat kecil */
+        @media (max-width: 600px) {
+            .api-key-container {
+                padding: 20px 15px; /* Kurangi padding untuk layar kecil */
+            }
+            
+            input[type="text"],
+            input[type="number"],
+            select,
+            .btn-generate {
+                font-size: 15px;
+            }
+        }
+
+        /* Bagian Output */
+        #output-key-section {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border: 1px dashed #ced4da;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        #output-key {
+            font-family: monospace;
+            word-break: break-all;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #d63384; /* Warna khas untuk API Key */
+        }
+        
+        #message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            display: none;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="api-key-container">
+    <h2>🔑 Generate API Key Baru</h2>
+    
+    <form id="api-key-form">
+        
+        <div class="form-group">
+            <label for="key-name">Nama Key (Contoh: Key Aplikasi Mobile)</label>
+            <input type="text" id="key-name" name="key_name" required 
+                   placeholder="Masukkan nama deskriptif untuk key ini">
+        </div>
+        
+        <div class="form-group">
+            <label for="key-scope">Izin Akses (Scope) Key</label>
+            <select id="key-scope" name="key_scope" required>
+                <option value="" disabled selected>Pilih tingkat izin</option>
+                <option value="read-only">Hanya Baca (Read-Only)</option>
+                <option value="read-write">Baca & Tulis (Read/Write)</option>
+                <option value="admin">Administrator (Akses Penuh)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="rate-limit">Batasan Rate Limit (Permintaan per menit)</label>
+            <input type="number" id="rate-limit" name="rate_limit" value="1000" min="10" 
+                   placeholder="Cth: 1000">
+        </div>
+
+        <div class="form-group">
+            <label for="allowed-ip">IP Address yang Diizinkan (Kosongkan untuk semua)</label>
+            <input type="text" id="allowed-ip" name="allowed_ip" 
+                   placeholder="Cth: 203.0.113.44, 198.51.100.0/24">
+        </div>
+        
+        <button type="submit" class="btn-generate">
+            Buat API Key
+        </button>
+    </form>
+    
+    <div id="message" style="display: none;"></div>
+
+    <div id="output-key-section" style="display: none;">
+        <label>API Key Anda yang Baru:</label>
+        <div id="output-key"></div>
+        <p style="font-size: 0.8em; color: #6c757d; margin-top: 10px;">
+            **PENTING:** Simpan key ini dengan aman. Key ini mungkin tidak akan ditampilkan lagi.
+        </p>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('api-key-form').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Mencegah submit form default
+        
+        const form = e.target;
+        const submitButton = form.querySelector('.btn-generate');
+        const outputSection = document.getElementById('output-key-section');
+        const outputKey = document.getElementById('output-key');
+        const messageDiv = document.getElementById('message');
+
+        // Reset UI
+        outputSection.style.display = 'none';
+        messageDiv.style.display = 'none';
+        
+        // Ambil nilai dari formulir
+        const keyName = document.getElementById('key-name').value;
+        const keyScope = document.getElementById('key-scope').value;
+        const rateLimit = document.getElementById('rate-limit').value;
+        const allowedIp = document.getElementById('allowed-ip').value;
+        
+        // Data yang akan dikirim ke server.js
+        // Catatan: server.js saat ini hanya menggunakan 'name' dan 'userId'.
+        // Kita kirim semua data, meskipun beberapa saat ini hanya untuk tujuan logging/simulasi.
+        const requestData = {
+            // UserId disimulasikan di sini, dalam aplikasi nyata ini didapat dari sesi otentikasi
+            userId: 'user-' + Math.random().toString(10).substring(2, 8), 
+            name: keyName,
+            scope: keyScope,
+            rateLimit: rateLimit,
+            allowedIp: allowedIp
+        };
+
+        // UI Loading State
+        submitButton.textContent = 'Membuat Key...';
+        submitButton.disabled = true;
+
+        try {
+            // Lakukan panggilan API ke endpoint Node.js
+            const response = await fetch('http://localhost:3000/api/keys', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Sukses
+                outputKey.textContent = result.apiKey;
+                outputSection.style.display = 'block';
+                
+                messageDiv.textContent = result.message || 'API Key berhasil dibuat!';
+                messageDiv.className = 'success';
+                messageDiv.style.display = 'block';
+            } else {
+                // Gagal (Cth: server merespons 400/500)
+                messageDiv.textContent = `Gagal membuat Key: ${result.message || 'Server error'}`;
+                messageDiv.className = 'error';
+                messageDiv.style.display = 'block';
+            }
+
+        } catch (error) {
+            // Gagal (Cth: jaringan down, server tidak berjalan)
+            console.error('Fetch error:', error);
+            messageDiv.textContent = 'Gagal terhubung ke server. Pastikan Node.js server berjalan di http://localhost:3000.';
+            messageDiv.className = 'error';
+            messageDiv.style.display = 'block';
+        } finally {
+            // Kembalikan UI state
+            submitButton.textContent = 'Buat API Key';
+            submitButton.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>
